@@ -33,6 +33,7 @@ class LoginController: UIViewController {
         userTextFeild.delegate = self
         passwordTextfield.delegate = self
         registerForKeyboardNotifcations()
+        view.backgroundColor = .white
 
         
     }
