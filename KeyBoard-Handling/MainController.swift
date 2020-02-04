@@ -18,14 +18,21 @@ class MainController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = #colorLiteral(red: 0.5357257724, green: 0.6674801707, blue: 0.6198809147, alpha: 1)
-        view.addGestureRecognizer(tapGesture)
         
+        view.addGestureRecognizer(tapGesture)
     }
 
      @objc private func segue() {
         
         // get instance of vc from story board
+        // let storyBoard = UIStoryboard(name: <#T##String#>, bundle: <#T##Bundle?#>)
+        
+        guard let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginController") else {
+            return
+        }
+        present(loginVC, animated: true)
+        
+        //navigationController?.pushViewController(loginVC, animated: true)
         
     }
 
