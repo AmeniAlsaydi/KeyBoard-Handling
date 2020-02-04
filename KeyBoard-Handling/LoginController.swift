@@ -21,6 +21,8 @@ class LoginController: UIViewController {
     
     var originialYConstraint: NSLayoutConstraint!
     
+    private var keyboardIsVisible = false
+    
     override func viewWillLayoutSubviews() {
         loginButton.layer.cornerRadius = 10
     }
@@ -47,27 +49,42 @@ class LoginController: UIViewController {
     @objc func keyboardWillShow(_ notification: NSNotification) {
         print("keyboard shown")
         // here is where we animate the VC and push everyhting up away from the key board.
+        if keyboardIsVisible { return }
         originialYConstraint = logoConstraint
         logoConstraint.constant = 20
         
-        UIView.animate(withDuration: 5.0) {
+        UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
         }
+        keyboardIsVisible = true
         
     }
     
     @objc func keyboardWillHide(_ notification: NSNotification) {
         print("keyboard hidden")
-        
+        resetUI()
         // here is where we animate the VC and push everyhting back down
 
+    }
+    
+    private func resetUI() {
+        keyboardIsVisible = false
+        logoConstraint.constant = 120 
+        UIView.animate(withDuration: 0.5) {
+            self.view.layoutIfNeeded()
+        }
     }
 
 }
 
 extension LoginController: UITextFieldDelegate {
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+            
+        return true
+    }
 }
+
 
 // note: save all the constraints that you want to alter in an array and map through it to animate it up.
 
