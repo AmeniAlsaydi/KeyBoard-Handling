@@ -17,6 +17,9 @@ class LoginController: UIViewController {
     @IBOutlet weak var passwordLabel: UILabel!
     @IBOutlet weak var passwordTextfield: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var logoConstraint: NSLayoutConstraint!
+    
+    var originialYConstraint: NSLayoutConstraint!
     
     override func viewWillLayoutSubviews() {
         loginButton.layer.cornerRadius = 10
@@ -34,7 +37,7 @@ class LoginController: UIViewController {
     
     private func registerForKeyboardNotifcations() {
         // singleton:
-        // set the current VC as an observer for notifications from the observer 
+        // set the current VC as an observer for notifications from the observer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         
          NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -44,10 +47,18 @@ class LoginController: UIViewController {
     @objc func keyboardWillShow(_ notification: NSNotification) {
         print("keyboard shown")
         // here is where we animate the VC and push everyhting up away from the key board.
+        originialYConstraint = logoConstraint
+        logoConstraint.constant = 20
+        
+        UIView.animate(withDuration: 5.0) {
+            self.view.layoutIfNeeded()
+        }
+        
     }
     
     @objc func keyboardWillHide(_ notification: NSNotification) {
         print("keyboard hidden")
+        
         // here is where we animate the VC and push everyhting back down
 
     }
