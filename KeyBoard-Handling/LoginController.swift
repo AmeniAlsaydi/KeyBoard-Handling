@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum AccountState {
+    case existingUser
+    case newUser
+}
+
 class LoginController: UIViewController {
     
     @IBOutlet weak var starbucksImage: UIImageView!
@@ -17,9 +22,18 @@ class LoginController: UIViewController {
     @IBOutlet weak var passwordLabel: UILabel!
     @IBOutlet weak var passwordTextfield: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var accountStateMessageLabel: UILabel!
+    @IBOutlet weak var accountStateButton: UIButton!
+    
+    
+    
     @IBOutlet weak var logoConstraint: NSLayoutConstraint!
     
+    
+    
     var originialYConstraint: NSLayoutConstraint!
+    
+    private var accountState: AccountState = .existingUser
     
     private var keyboardIsVisible = false
     
@@ -34,7 +48,7 @@ class LoginController: UIViewController {
         passwordTextfield.delegate = self
         registerForKeyboardNotifcations()
         view.backgroundColor = .white
-
+        
         
     }
     
@@ -43,7 +57,7 @@ class LoginController: UIViewController {
         // set the current VC as an observer for notifications from the observer
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         
-         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
     }
     
@@ -65,7 +79,7 @@ class LoginController: UIViewController {
         print("keyboard hidden")
         resetUI()
         // here is where we animate the VC and push everyhting back down
-
+        
     }
     
     private func resetUI() {
@@ -75,13 +89,38 @@ class LoginController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-
+    
+    @IBAction func toggleAccountState(_ sender: UIButton) {
+        // change the account login state
+        accountState = accountState == .existingUser ? .newUser : .existingUser
+        
+        // animation duration
+        let duration: TimeInterval = 1.0
+        
+        if accountState == .existingUser {
+            
+            UIView.transition(with: self.view, duration: duration, options: [.transitionCrossDissolve], animations: {
+                self.loginLabel.text = "Login"
+                self.loginButton.setTitle("Login", for: .normal)
+                self.accountStateMessageLabel.text = "Don't have an account?"
+                self.accountStateButton.setTitle("SIGNUP", for: .normal)
+            }, completion: nil)
+        } else {
+            UIView.transition(with: self.view, duration: duration, options: [.transitionCrossDissolve], animations: {
+                self.loginLabel.text = "Sign Up"
+                self.loginButton.setTitle("Sign Up", for: .normal)
+                self.accountStateMessageLabel.text = "Already have an account?"
+                self.accountStateButton.setTitle("LOGIN", for: .normal)
+            }, completion: nil)
+        }
+    }
 }
+
 
 extension LoginController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-            
+        
         return true
     }
 }
